@@ -193,7 +193,7 @@ public struct MenuBarPopoverView: View {
 
                     MetricCard(
                         title: "SNR (Kalite)",
-                        icon: "chart.bar.fill",
+                        icon: "bolt.fill",
                         valueText: sinr != nil ? String(format: "%.1f dB", sinr!) : "--",
                         subtitle: sinrGrade.rawValue,
                         tintColor: sinrGrade.color
@@ -205,10 +205,10 @@ public struct MenuBarPopoverView: View {
 
                     MetricCard(
                         title: "Hücre (Cell ID)",
-                        icon: "antenna.radiowaves.left.and.right",
+                        icon: "mappin.circle.fill",
                         valueText: cell.isEmpty ? "--" : cell,
                         subtitle: !earfcn.isEmpty ? "EARFCN: \(earfcn) · \(net)" : net,
-                        tintColor: .blue
+                        tintColor: .red
                     )
                 }
             }

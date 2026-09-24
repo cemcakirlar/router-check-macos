@@ -44,7 +44,7 @@ struct RouterCheckApp: App {
             snr = "-- dB"
         }
         let cid = (data.cell_id?.isEmpty == false) ? data.cell_id! : "--"
-        return "📶 \(net) | 📊 SNR: \(snr) | 🗼 CID: \(cid)"
+        return "🌐 \(net)   ⚡ \(snr)   📍 CID \(cid)"
     }
 
     var body: some Scene {
