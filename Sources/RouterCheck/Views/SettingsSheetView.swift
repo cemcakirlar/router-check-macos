@@ -8,7 +8,7 @@ public struct SettingsSheetView: View {
     @State private var routerPassword: String = ""
     @State private var refreshIntervalMinutes: Int = 1
     @State private var autoRefreshOnStartup: Bool = true
-    @State private var mainWindowOnStartup: String = "visible"
+    @State private var showWindowOnStartup: Bool = true
     @State private var themeMode: String = "system"
 
     public init(store: RouterStore) {
@@ -90,11 +90,8 @@ public struct SettingsSheetView: View {
                         RouterStore.applyThemeMode(newTheme)
                     }
 
-                    Picker("Başlangıçta Pencere", selection: $mainWindowOnStartup) {
-                        Text("Görünür (Pencereyi Aç)").tag("visible")
-                        Text("Gizli (Yalnızca Menü Çubuğunda Çalış)").tag("hidden")
-                    }
-                    .help("Gizli seçildiğinde uygulama açıldığında pencere görünmez, sadece menü çubuğundan yönetilir.")
+                    Toggle("Başlangıçta ana pencereyi aç", isOn: $showWindowOnStartup)
+                        .help("Kapalıyken uygulama açıldığında pencere görünmez, yalnızca menü çubuğundan çalışır.")
                 }
             }
             .formStyle(.grouped)
@@ -114,7 +111,7 @@ public struct SettingsSheetView: View {
                         password: routerPassword,
                         intervalMinutes: max(refreshIntervalMinutes, 1),
                         autoRefreshOnStartup: autoRefreshOnStartup,
-                        mainWindowOnStartup: mainWindowOnStartup,
+                        mainWindowOnStartup: showWindowOnStartup ? "visible" : "hidden",
                         themeMode: themeMode
                     )
                     dismiss()
@@ -130,7 +127,7 @@ public struct SettingsSheetView: View {
             routerPassword = store.config.router_password
             refreshIntervalMinutes = store.config.refreshIntervalMinutes
             autoRefreshOnStartup = store.config.auto_refresh_on_startup
-            mainWindowOnStartup = store.config.main_window_on_startup
+            showWindowOnStartup = (store.config.main_window_on_startup != "hidden")
             themeMode = store.config.theme_mode
         }
     }
