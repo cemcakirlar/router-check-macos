@@ -115,9 +115,19 @@ public struct RouterData: Codable, Sendable {
         return val * 8
     }
 
+    public var sessionRxBytes: Int64? {
+        guard let s = realtime_rx_bytes, let val = Int64(s) else { return nil }
+        return val
+    }
+
+    public var sessionTxBytes: Int64? {
+        guard let s = realtime_tx_bytes, let val = Int64(s) else { return nil }
+        return val
+    }
+
     public var sessionTotalBytes: Int64? {
-        let rx = Int64(realtime_rx_bytes ?? "") ?? 0
-        let tx = Int64(realtime_tx_bytes ?? "") ?? 0
+        let rx = sessionRxBytes ?? 0
+        let tx = sessionTxBytes ?? 0
         let total = rx + tx
         return total > 0 ? total : nil
     }

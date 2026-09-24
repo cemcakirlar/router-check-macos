@@ -24,56 +24,73 @@ public struct NetworkInfoCardView: View {
                     .foregroundColor(.primary)
                 Spacer()
 
-                if let connected = data?.isPppConnected {
+                if let sta = data?.wifi_access_sta_num, !sta.isEmpty {
+                    Text("\(sta) İstemci")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            // WAN connection stats row (mirrors Monthly stats row in SystemInfoCardView)
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("WAN IP Adresi")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(data?.wan_ipaddr ?? "--")
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                     HStack(spacing: 5) {
                         Circle()
-                            .fill(connected ? Color.green : Color.red)
-                            .frame(width: 8, height: 8)
+                            .fill(data?.isPppConnected == true ? Color.green : Color.red)
+                            .frame(width: 7, height: 7)
                         Text(pppStatusText)
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
                 }
+
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 4) {
+                    if data?.isPppConnected == true {
+                        Button {
+                            Task { await store.disconnectPPP() }
+                        } label: {
+                            Label("PPP Bağlantısını Kes", systemImage: "bolt.slash.fill")
+                                .font(.caption)
+                                .foregroundColor(.red)
+                        }
+                        .buttonStyle(.bordered)
+                    } else {
+                        Button {
+                            Task { await store.connectPPP() }
+                        } label: {
+                            Label("PPP Bağlan", systemImage: "bolt.fill")
+                                .font(.caption)
+                                .foregroundColor(.green)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                }
             }
 
+            Divider()
+
+            // LAN details grid (mirrors System details grid)
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                infoRow(label: "WAN IP", value: data?.wan_ipaddr ?? "--")
                 infoRow(label: "LAN IP", value: data?.formattedLanIp ?? "--")
                 infoRow(label: "Netmask", value: data?.lan_netmask ?? "--")
                 infoRow(
                     label: "DHCP",
                     value: data?.dhcpEnabled == "1" ? "Açık" : (data?.dhcpEnabled == "0" ? "Kapalı" : "--")
                 )
-                infoRow(label: "WiFi MAC", value: data?.mac_address ?? "--")
                 infoRow(
                     label: "WiFi İstemciler",
                     value: data?.wifi_access_sta_num ?? "--"
                 )
-            }
-
-            Divider()
-
-            HStack {
-                if data?.isPppConnected == true {
-                    Button {
-                        Task { await store.disconnectPPP() }
-                    } label: {
-                        Label("PPP Bağlantısını Kes", systemImage: "bolt.slash.fill")
-                            .font(.caption)
-                            .foregroundColor(.red)
-                    }
-                    .buttonStyle(.bordered)
-                } else {
-                    Button {
-                        Task { await store.connectPPP() }
-                    } label: {
-                        Label("PPP Bağlan", systemImage: "bolt.fill")
-                            .font(.caption)
-                            .foregroundColor(.green)
-                    }
-                    .buttonStyle(.bordered)
-                }
-                Spacer()
+                infoRow(label: "WiFi MAC", value: data?.mac_address ?? "--")
+                infoRow(label: "İstemci IP", value: data?.ip_addr_web ?? "--")
             }
         }
         .padding(16)

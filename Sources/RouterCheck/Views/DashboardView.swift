@@ -56,7 +56,7 @@ public struct DashboardView: View {
                 .padding(16)
             }
         }
-        .frame(minWidth: 840, minHeight: 580)
+        .frame(minWidth: 860, minHeight: 680)
         .background(Color(nsColor: .windowBackgroundColor))
         .background(
             WindowAccessor { window in

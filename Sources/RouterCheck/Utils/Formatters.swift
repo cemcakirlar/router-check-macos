@@ -14,6 +14,19 @@ public enum Formatters {
         }
     }
 
+    public static func formatSpeedParts(bps: Double?) -> (value: String, unit: String) {
+        guard let bps = bps, bps >= 0 else { return ("--", "") }
+        if bps >= 1_000_000_000 {
+            return (String(format: "%.2f", bps / 1_000_000_000), "Gbps")
+        } else if bps >= 1_000_000 {
+            return (String(format: "%.2f", bps / 1_000_000), "Mbps")
+        } else if bps >= 1_000 {
+            return (String(format: "%.1f", bps / 1_000), "Kbps")
+        } else {
+            return (String(format: "%.0f", bps), "bps")
+        }
+    }
+
     public static func formatBytes(_ bytes: Int64?) -> String {
         guard let bytes = bytes, bytes >= 0 else { return "--" }
         let d = Double(bytes)

@@ -84,13 +84,12 @@ public struct SignalCardView: View {
 
                     SparklineView(points: store.rsrpHistory, strokeColor: rsrpGrade.color)
 
-                    HStack {
-                        statItem(label: "Min", val: rsrpStats.min)
-                        Spacer()
-                        statItem(label: "Ort", val: rsrpStats.avg)
-                        Spacer()
-                        statItem(label: "Maks", val: rsrpStats.max)
+                    VStack(spacing: 4) {
+                        statRow(label: "MIN", val: rsrpStats.min)
+                        statRow(label: "AVG", val: rsrpStats.avg)
+                        statRow(label: "MAX", val: rsrpStats.max)
                     }
+                    .padding(.top, 2)
                 }
                 .frame(maxWidth: .infinity)
 
@@ -119,13 +118,12 @@ public struct SignalCardView: View {
 
                     SparklineView(points: store.sinrHistory, strokeColor: sinrGrade.color)
 
-                    HStack {
-                        statItem(label: "Min", val: sinrStats.min)
-                        Spacer()
-                        statItem(label: "Ort", val: sinrStats.avg)
-                        Spacer()
-                        statItem(label: "Maks", val: sinrStats.max)
+                    VStack(spacing: 4) {
+                        statRow(label: "MIN", val: sinrStats.min)
+                        statRow(label: "AVG", val: sinrStats.avg)
+                        statRow(label: "MAX", val: sinrStats.max)
                     }
+                    .padding(.top, 2)
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -179,13 +177,15 @@ public struct SignalCardView: View {
         .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 2)
     }
 
-    private func statItem(label: String, val: String) -> some View {
-        VStack(spacing: 2) {
+    private func statRow(label: String, val: String) -> some View {
+        HStack {
             Text(label)
-                .font(.system(size: 9))
+                .font(.system(size: 10, weight: .semibold, design: .monospaced))
                 .foregroundColor(.secondary)
+            Spacer()
             Text(val)
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
+                .foregroundColor(.primary)
         }
     }
 }
