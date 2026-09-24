@@ -39,7 +39,7 @@ public struct DashboardView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
 
-            ScrollView(.vertical, showsIndicators: true) {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
                     // Top Row: Signal & Speeds
                     HStack(alignment: .top, spacing: 16) {
@@ -55,8 +55,9 @@ public struct DashboardView: View {
                 }
                 .padding(16)
             }
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .frame(minWidth: 860, minHeight: 680)
+        .frame(minWidth: 860, idealWidth: 880, minHeight: 580, idealHeight: 585)
         .background(Color(nsColor: .windowBackgroundColor))
         .background(
             WindowAccessor { window in

@@ -19,6 +19,14 @@ public final class WindowManager: NSObject, NSWindowDelegate, @unchecked Sendabl
         self.store = store
         window.delegate = self
         window.isReleasedWhenClosed = false
+        if window.frame.height > 620 {
+            var frame = window.frame
+            let targetHeight: CGFloat = 585
+            frame.origin.y += (frame.size.height - targetHeight)
+            frame.size.height = targetHeight
+            frame.size.width = 880
+            window.setFrame(frame, display: true, animate: false)
+        }
 
         if !hasAppliedStartupVisibility {
             hasAppliedStartupVisibility = true

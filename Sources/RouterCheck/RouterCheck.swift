@@ -53,7 +53,7 @@ struct RouterCheckApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
-        .defaultSize(width: 880, height: 720)
+        .defaultSize(width: 880, height: 585)
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("Router Check Hakkında") {
