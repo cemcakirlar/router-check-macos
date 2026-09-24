@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:router-check-macos}",
+      "name": "Debug RouterCheck",
+      "target": "RouterCheck",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug RouterCheck"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:router-check-macos}",
+      "name": "Release RouterCheck",
+      "target": "RouterCheck",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release RouterCheck"
+    }
+  ]
+}
