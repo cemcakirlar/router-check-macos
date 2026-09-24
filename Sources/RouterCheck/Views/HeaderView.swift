@@ -139,18 +139,24 @@ public struct HeaderView: View {
                 .help("Ayarlar")
 
                 if store.status == .connected {
-                    Button("Çıkış") {
+                    Button {
                         Task { await store.logout() }
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.system(size: 13))
                     }
-                    .font(.caption)
                     .buttonStyle(.bordered)
+                    .help("Çıkış Yap")
                 } else {
-                    Button("Giriş Yap") {
+                    Button {
                         Task { await store.login() }
+                    } label: {
+                        Image(systemName: "rectangle.portrait.and.arrow.forward")
+                            .font(.system(size: 13))
                     }
-                    .font(.caption)
                     .buttonStyle(.borderedProminent)
                     .tint(.blue)
+                    .help("Giriş Yap")
                 }
             }
         }
