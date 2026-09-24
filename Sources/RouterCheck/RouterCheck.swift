@@ -23,13 +23,28 @@ struct RouterCheckApp: App {
     @State private var store = RouterStore()
 
     private var menuBarLabel: String {
-        guard store.status == .connected, let data = store.routerData else {
-            return "Offline"
+        if store.isRecovering {
+            return "⚡ Kurtarılıyor..."
         }
-        let net = data.network_type ?? "4G"
-        let rsrp = data.rsrpValue.map { "\($0)dBm" } ?? ""
-        let sinr = data.sinrValue.map { String(format: "%.0fdB", $0) } ?? ""
-        return "\(net) | \(rsrp) | \(sinr)"
+        guard store.status == .connected, let data = store.routerData else {
+            switch store.status {
+            case .connecting, .loggingIn:
+                return "🟡 Bağlanıyor..."
+            case .error:
+                return "🔴 Hata"
+            case .offline, .connected:
+                return "🔴 Çevrimdışı"
+            }
+        }
+        let net = (data.network_type?.isEmpty == false) ? data.network_type! : "4G"
+        let snr: String
+        if let sinrVal = data.sinrValue {
+            snr = String(format: "%.1f dB", sinrVal)
+        } else {
+            snr = "-- dB"
+        }
+        let cid = (data.cell_id?.isEmpty == false) ? data.cell_id! : "--"
+        return "📶 \(net) | 📊 SNR: \(snr) | 🗼 CID: \(cid)"
     }
 
     var body: some Scene {
@@ -38,7 +53,7 @@ struct RouterCheckApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
-        .defaultSize(width: 860, height: 600)
+        .defaultSize(width: 880, height: 720)
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("Router Check Hakkında") {
@@ -55,80 +70,10 @@ struct RouterCheckApp: App {
         }
 
         MenuBarExtra {
-            MenuBarContentView(store: store)
+            MenuBarPopoverView(store: store)
         } label: {
-            HStack(spacing: 4) {
-                Image(systemName: "antenna.radiowaves.left.and.right")
-                Text(menuBarLabel)
-            }
+            Text(menuBarLabel)
         }
-    }
-}
-
-struct MenuBarContentView: View {
-    @Bindable var store: RouterStore
-    @Environment(\.openWindow) private var openWindow
-
-    var body: some View {
-        Text("📡 Router: \(store.config.router_ip)")
-            .font(.headline)
-        Text("\(store.status == .connected ? "🟢" : "🔴") Durum: \(store.status.title)")
-
-        if let data = store.routerData {
-            Divider()
-            Text("📶 Şebeke: \(data.network_type ?? "--") (\(data.network_provider ?? "--"))")
-            if let rsrp = data.rsrpValue {
-                Text("📡 RSRP: \(rsrp) dBm (\(SignalGrade.forRsrp(rsrp).rawValue))")
-            }
-            if let sinr = data.sinrValue {
-                Text("📊 SINR: \(String(format: "%.1f", sinr)) dB (\(SignalGrade.forSinr(sinr).rawValue))")
-            }
-            if let cell = data.cell_id, !cell.isEmpty {
-                Text("🏷️ Cell ID: \(cell)")
-            }
-            if let dl = data.dlSpeedBps, let ul = data.ulSpeedBps {
-                Text("⚡ Hız: \(Formatters.formatSpeed(bps: dl)) ↓ | \(Formatters.formatSpeed(bps: ul)) ↑")
-            }
-        }
-
-        Divider()
-
-        Button(store.isWindowVisible ? "👁️ Pencereyi Gizle" : "🪟 Pencereyi Göster") {
-            if store.isWindowVisible {
-                WindowManager.shared.hideMainWindow()
-            } else {
-                openWindow(id: "main")
-                WindowManager.shared.showMainWindow()
-            }
-        }
-
-        Divider()
-
-        Button(store.autoRefresh ? "⏸️ Yoklamayı Durdur" : "▶️ Yoklamayı Başlat") {
-            store.toggleAutoRefresh()
-        }
-
-        Button("🔄 Şimdi Yenile") {
-            Task { await store.refresh() }
-        }
-
-        Button("⚡ Hücreyi Kurtar") {
-            openWindow(id: "main")
-            WindowManager.shared.showMainWindow()
-            Task { await store.startCellRecovery() }
-        }
-
-        Divider()
-
-        Button("⚙️ Ayarlar...") {
-            openWindow(id: "main")
-            WindowManager.shared.showMainWindow()
-            store.isSettingsPresented = true
-        }
-
-        Button("🚪 Çıkış") {
-            WindowManager.shared.isTerminating = true
-            NSApplication.shared.terminate(nil)
-        }
+        .menuBarExtraStyle(.window)
     }
 }
