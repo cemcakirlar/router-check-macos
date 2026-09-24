@@ -4,7 +4,7 @@ ZTE mobil 4G/5G yönlendiricileri (MF286R, MC801A, MU5001 vb.) için %100 Swift 
 
 ---
 
-## ✨ Aşama 1: PoC / MVP Özellikleri
+## ✨ Özellikler
 
 - **%100 Yerel Swift & SwiftUI**: Electron, Node veya harici web wrapper'ları olmadan doğrudan macOS API'leri ile çalışır.
 - **Pure Swift ZTE Client (`ZTEClient`)**:
@@ -34,22 +34,80 @@ ZTE mobil 4G/5G yönlendiricileri (MF286R, MC801A, MU5001 vb.) için %100 Swift 
 
 ---
 
-## 🛠️ Derleme ve Çalıştırma
+## 🛠️ Geliştirici ve Derleme Komutları
 
 ### Gereksinimler
 - macOS 14.0+ (Sonoma, Sequoia veya üstü)
 - Xcode Command Line Tools veya Swift 6+
 
-### Komutlar
+### Kullanılabilir Komutlar (`Makefile`)
 
 ```bash
-# 1. Hızlıca derleyip çalıştırmak için:
+# 1. Yardım menüsünü görüntüle
+make help
+
+# 2. Debug derleyip arka planda başlat
 make run
 
-# 2. Yalnızca .app bundle üretmek için:
-make app
-# Çıktı: build/RouterCheck.app
+# 3. Canlı terminal logları ile ön planda çalıştır
+make run-fg
 
-# 3. Geliştirici terminal derlemesi için:
-swift run
+# 4. Çalışan uygulamayı sonlandır
+make stop
+
+# 5. Debug veya Release derlemesi yap
+make build      # Debug
+make release    # Release
+make app        # Release ve .app bundle (build/RouterCheck.app)
+
+# 6. Dağıtım paketi oluştur (.zip ve .sha256)
+make package    # dist/Router-Check-v<version>-macOS.zip
+
+# 7. macOS /Applications dizinine kur
+make install
+
+# 8. Canlı macOS sistem loglarını dinle
+make logs
+
+# 9. Derleme önbelleğini ve çıktıları temizle
+make clean
 ```
+
+### Sürüm Yönetimi ve Yayınlama
+
+Semantic Versioning standartlarına uygun otomatik sürüm artırımı, Changelog güncellemesi ve GitHub Release oluşturma:
+
+```bash
+# Sürüm artırma simülasyonu (güvenli test)
+make release-dry-run
+
+# Patch sürümü yayınla (örn. 1.0.0 -> 1.0.1)
+make release-patch
+
+# Minor sürümü yayınla (örn. 1.0.0 -> 1.1.0)
+make release-minor
+
+# Major sürümü yayınla (örn. 1.0.0 -> 2.0.0)
+make release-major
+
+# Belirli bir sürümü yayınla
+make release-publish VERSION=1.2.0
+```
+
+---
+
+## 🍏 macOS Kurulum ve Gatekeeper Notu
+
+Uygulama Apple Developer ID sertifikası olmadan açık kaynak ad-hoc imzalandığı için macOS ilk açılışta *"Geliştirici doğrulanamadı"* uyarısı verebilir.
+
+Uygulamayı açmak için Terminal'de şu komutu çalıştırmanız yeterlidir:
+```bash
+xattr -cr "/Applications/Router Check.app"
+```
+*Alternatif olarak: **Sistem Ayarları ➔ Gizlilik ve Güvenlik** altından **Yine de Aç** butonuna basabilirsiniz.*
+
+---
+
+## 📄 Lisans
+
+Bu proje [MIT Lisansı](LICENSE) altında açık kaynak olarak lisanslanmıştır. Detaylar için [LICENSE](LICENSE) ve [CHANGELOG.md](CHANGELOG.md) dosyalarını inceleyebilirsiniz.

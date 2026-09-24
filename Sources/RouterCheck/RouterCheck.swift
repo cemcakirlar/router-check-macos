@@ -42,10 +42,12 @@ struct RouterCheckApp: App {
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("Router Check Hakkında") {
+                    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+                    let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
                     NSApplication.shared.orderFrontStandardAboutPanel(
                         options: [
                             NSApplication.AboutPanelOptionKey.applicationName: "Router Check",
-                            NSApplication.AboutPanelOptionKey.version: "1.0.0 (Native Swift macOS)"
+                            NSApplication.AboutPanelOptionKey.version: "\(version) (Build \(build))"
                         ]
                     )
                 }

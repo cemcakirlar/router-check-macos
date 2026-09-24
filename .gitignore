@@ -1,9 +1,28 @@
+# macOS & System
 .DS_Store
-/.build
-/build
-/Packages
-xcuserdata/
+*/.DS_Store
+
+# Build artifacts
+/.build/
+/build/
 DerivedData/
-.swiftpm/configuration/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+/Packages/
+
+# Distribution & Releases
+dist/
+*.zip
+*.sha256
+.tmp/
+
+# SwiftPM & Xcode
+.swiftpm/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Secrets & Environment
+.env
+.env.*
+*.secret
+*.key
 .netrc
